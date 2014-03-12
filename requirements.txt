@@ -1,0 +1,5 @@
+django<1.7
+dj-database-url
+south==0.8.4
+pysqlite2
+owslib
