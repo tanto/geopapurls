@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from views import LayersView
+from views import LayersView,MapurlsView,MapurlDetailView
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -13,5 +13,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^layers/$',LayersView.as_view())
+    url(r'^layers/$',LayersView.as_view()),
+    url(r'^mapurls/$',MapurlsView.as_view()),
+    url(r'^mapurls/(?P<pk>\d+)/(?P<action>[a-zA-Z]+)?$',MapurlDetailView.as_view())
 )

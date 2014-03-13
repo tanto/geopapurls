@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Layers</h2>
+    <ul>
+        {% for layer in layer_list %}
+            <li>{{layer.title}}&nbsp&nbsp&nbsp<a href="/mapurls/{{ layer.id }}">>></a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

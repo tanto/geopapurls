@@ -6,6 +6,8 @@ from owsparser import parse_wms
 
 def service_url_validator(url):
     a = 1
+    
+preferred_formats = ['image/png', 'image/jpeg', 'image/geotiff', 'image/tiff']
 
 class Layer(geomodels.Model):
     name = models.CharField(max_length=255)
@@ -46,6 +48,12 @@ class Service(geomodels.Model):
             return xmin,ymin,xmax,ymax
         else:
             return layer_bbox
+
+    def get_preferred_format(self):
+        formats = self.getmapformats.split(' ')
+        for f in preferred_formats:
+            if f in formats:
+                return f
     
     def save(self,force_insert=False, force_update=False, using=None,update_fields=None):
         if not self.pk:
