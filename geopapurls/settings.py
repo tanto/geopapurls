@@ -5,9 +5,7 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 DEBUG = bool(os.environ.get('DEBUG', False))
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
+ADMINS = ()
 
 MANAGERS = ADMINS
 
@@ -24,11 +22,7 @@ MEDIA_URL = ''
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'static')
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -61,7 +55,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 

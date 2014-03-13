@@ -5,14 +5,6 @@ from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from django.http import HttpResponse
 from models import Layer
-
-layer_template = '''Service URL: 
-Layer ID: {id}
-Layer extent: {bbox}
-GetMap: {url}
-description={description}
-mbtiles=wmslayers/{uid}.mbtiles
-'''
        
 mapurl_template = '''url={url}
 minzoom=11
