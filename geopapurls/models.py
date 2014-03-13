@@ -3,6 +3,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models as geomodels
 from django.contrib.gis.geos.polygon import Polygon
 from owsparser import parse_wms
+
+def service_url_validator(url):
+    pass
     
 preferred_formats = ['image/png', 'image/jpeg', 'image/geotiff', 'image/tiff']
 
