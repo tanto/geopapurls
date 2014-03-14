@@ -109,3 +109,5 @@ DATABASES = {
 
 ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split()
 SECRET_KEY = os.environ['SECRET_KEY']
+
+MAX_RESULTS_PER_PAGE = int(os.environ['MAX_RESULTS_PER_PAGE'])

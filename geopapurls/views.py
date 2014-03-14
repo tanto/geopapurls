@@ -2,6 +2,7 @@ import json
 from cStringIO import StringIO
 from django.core.servers.basehttp import FileWrapper
 from django.views.generic import ListView, DetailView
+from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponse
 from models import Layer
@@ -20,14 +21,12 @@ mbtiles=wmslayers/{uid}.mbtiles
 
 url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
 
-MAX_RESULTS_PER_PAGE = 20
-
 class CommonListView(ListView):
     model = Layer
     
     def filter_queryset(self,request):
         queryset = self.get_queryset()
-        results_per_page = MAX_RESULTS_PER_PAGE
+        results_per_page = settings.MAX_RESULTS_PER_PAGE
         offset = 0
         query = request.GET
         p = query.get('p',None)
