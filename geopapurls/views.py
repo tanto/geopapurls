@@ -47,7 +47,7 @@ class CommonListView(ListView):
         if query_limit:
             try:
                 limit = int(query_limit)
-                results_per_page = min(limit,MAX_RESULTS_PER_PAGE)
+                results_per_page = min(limit,settings.MAX_RESULTS_PER_PAGE)
             except:
                 pass
         query_offset = query.get('o',None)
