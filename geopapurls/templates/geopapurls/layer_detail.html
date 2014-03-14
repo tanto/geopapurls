@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block extrastyle %} 
+	{{ block.super }}
+	<link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.13.1/theme/default/style.css" type="text/css">
+	<link rel="stylesheet" href="{{STATIC_URL}}geopapurls/css/preview.css" type="text/css">
+{% endblock %}
+{% block extrajs %} 
+	{{ block.super }}
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"></script>
+	<script type="text/javascript">
+        var map, layer;
+        $('document').ready(function(){
+        	var WGS84 = new OpenLayers.Projection("EPSG:4326");
+			var GM = new OpenLayers.Projection("EPSG:3857");
+        
+            map = new OpenLayers.Map('map',{projection:"EPSG:3857"});
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+			osm = new OpenLayers.Layer.OSM()
+            var layer_wms = new OpenLayers.Layer.WMS("{{ object.title }}",
+            									"{{ object.service.getmapurl }}",
+						            		{layers:"{{ object.name }}",format:"image/png",transparent:true},
+						            		{isBaseLayer:false,singleTile: true});
+            map.addLayers([osm,layer_wms]);
+            map.zoomToExtent(new OpenLayers.Bounds({{ bounds_xmin }},{{ bounds_ymin }},{{ bounds_xmax }},{{ bounds_ymax }}).transform(WGS84, GM));
+        })
+    </script>
+{% endblock %}
+{% block content %}
+    <h2>Layer preview</h2>
+    <div id="map" class="mediummap"></div>
+{% endblock %}

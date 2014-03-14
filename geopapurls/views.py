@@ -92,7 +92,7 @@ class MapurlsView(CommonListView):
 
 class MapurlDetailView(DetailView):
     model = Layer
-    admitted_actions = ['download']
+    admitted_actions = ['download','preview']
     
     def get(self, request, *args, **kwargs):
         action = kwargs.get('action',None)
@@ -100,9 +100,9 @@ class MapurlDetailView(DetailView):
             action_method = getattr(self,'action_'+action)
         else:
             action_method = self.action_default
-        return action_method()
+        return action_method(request, *args, **kwargs)
     
-    def action_download(self):
+    def action_download(self, request, *args, **kwargs):
         mapurl_file = StringIO()
         self.object = self.get_object()
         response_text = self.make_from_template()
@@ -113,12 +113,23 @@ class MapurlDetailView(DetailView):
         mapurl_file.seek(0)
         return response
     
-    def action_default(self):
+    def action_default(self, request, *args, **kwargs):
         self.object = self.get_object()
         response_text = self.make_from_template()
         response = HttpResponse(mimetype='text/plain')
         response.write('%s\n' % response_text)
         return response
+    
+    def action_preview(self, request, *args, **kwargs):
+        return super(MapurlDetailView,self).get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(MapurlDetailView,self).get_context_data(**kwargs)
+        context['bounds_xmin'] = self.object.bbox.extent[0]
+        context['bounds_ymin'] = self.object.bbox.extent[1]
+        context['bounds_xmax'] = self.object.bbox.extent[2]
+        context['bounds_ymax'] = self.object.bbox.extent[3]
+        return context
     
     def make_from_template(self):
         mapurl_dict = {}
