@@ -41,10 +41,10 @@ class CommonListView(ListView):
             qtitle = Q(title__icontains=t)
             qabstract = Q(abstract__icontains=t)
             queryset = queryset.filter(qtitle | qabstract)
-        query_limit = query.get('limit',None)
+        query_limit = query.get('l',None)
         if query_limit:
             results_per_page = min(int(query_limit),MAX_RESULTS_PER_PAGE)
-        query_offset = query.get('offset',None)
+        query_offset = query.get('o',None)
         if query_offset:
             offset = int(query_offset)
         results_per_page = results_per_page + offset
