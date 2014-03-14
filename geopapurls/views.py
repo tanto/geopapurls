@@ -32,10 +32,13 @@ class CommonListView(ListView):
         query = request.GET
         p = query.get('p',None)
         if p:
-            coords = p.split(',')
-            x = coords[0]
-            y = coords[1]
-            queryset = queryset.filter(bbox__contains="POINT(%s %s)" % (x,y))
+            try:
+                coords = p.split(',')
+                x = float(coords[0])
+                y = float(coords[1])
+                queryset = queryset.filter(bbox__contains="POINT(%s %s)" % (x,y))
+            except:
+                pass
         t = query.get('t',None)
         if t:
             qtitle = Q(title__icontains=t)
