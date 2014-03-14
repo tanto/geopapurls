@@ -46,10 +46,17 @@ class CommonListView(ListView):
             queryset = queryset.filter(qtitle | qabstract)
         query_limit = query.get('l',None)
         if query_limit:
-            results_per_page = min(int(query_limit),MAX_RESULTS_PER_PAGE)
+            try:
+                limit = int(query_limit)
+                results_per_page = min(limit,MAX_RESULTS_PER_PAGE)
+            except:
+                pass
         query_offset = query.get('o',None)
         if query_offset:
-            offset = int(query_offset)
+            try:
+                offset = int(query_offset)
+            except:
+                pass
         results_per_page = results_per_page + offset
         return queryset[offset:results_per_page]
     
