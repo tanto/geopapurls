@@ -19,25 +19,36 @@ mbtiles=wmslayers/{uid}.mbtiles
 '''
 
 url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
-        
+
+MAX_RESULTS_PER_PAGE = 20
+
 class CommonListView(ListView):
     model = Layer
     
     def filter_queryset(self,request):
         queryset = self.get_queryset()
+        results_per_page = MAX_RESULTS_PER_PAGE
+        offset = 0
         query = request.GET
-        ll = query.get('ll',None)
-        if ll:
-            coords = ll.split(',')
+        p = query.get('p',None)
+        if p:
+            coords = p.split(',')
             x = coords[0]
             y = coords[1]
             queryset = queryset.filter(bbox__contains="POINT(%s %s)" % (x,y))
-        s = query.get('s',None)
-        if s:
-            qtitle = Q(title__icontains=s)
-            qabstract = Q(abstract__icontains=s)
+        t = query.get('t',None)
+        if t:
+            qtitle = Q(title__icontains=t)
+            qabstract = Q(abstract__icontains=t)
             queryset = queryset.filter(qtitle | qabstract)
-        return queryset
+        query_limit = query.get('limit',None)
+        if query_limit:
+            results_per_page = min(int(query_limit),MAX_RESULTS_PER_PAGE)
+        query_offset = query.get('offset',None)
+        if query_offset:
+            offset = int(query_offset)
+        results_per_page = results_per_page + offset
+        return queryset[offset:results_per_page]
     
     def make_url(self,layer):
         service_url = layer.service.getmapurl if layer.service.getmapurl else layer.service.url
@@ -61,8 +72,9 @@ class MapurlsView(CommonListView):
         layers_list = []
         for layer in layers:
             layer_dict = {}
-            layer_dict['title'] = layer.title
             layer_dict['id'] = layer.id
+            layer_dict['title'] = layer.title
+            layer_dict['service'] = layer.service.name
             layers_list.append(layer_dict)
 
         layers_json = json.dumps(layers_list)
