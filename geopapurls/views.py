@@ -16,7 +16,7 @@ format={format}
 defaultzoom=17
 bounds={bbox}
 description={description}
-mbtiles=wmslayers/_TANTO_{uid}.mbtiles
+mbtiles=wmslayers/_tanto_{uid}.mbtiles
 '''
 
 url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
@@ -108,7 +108,7 @@ class MapurlDetailView(DetailView):
         response_text = self.make_from_template()
         mapurl_file.write(response_text)
         response = HttpResponse(FileWrapper(mapurl_file), content_type='application/mapurl')
-        response['Content-Disposition'] = 'attachment; filename=TANTO_%s.mapurl' % str(self.object.pk)
+        response['Content-Disposition'] = 'attachment; filename=tanto_%s.mapurl' % str(self.object.pk)
         response['Content-Length'] = mapurl_file.tell()
         mapurl_file.seek(0)
         return response
