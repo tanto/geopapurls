@@ -1,6 +1,7 @@
 import json
 from cStringIO import StringIO
 from django.core.servers.basehttp import FileWrapper
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.conf import settings
 from django.db.models import Q
@@ -20,6 +21,9 @@ mbtiles=wmslayers/_tanto_{uid}.mbtiles
 '''
 
 url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
+
+def home(request):
+    return redirect('layers-list')
 
 class CommonListView(ListView):
     model = Layer

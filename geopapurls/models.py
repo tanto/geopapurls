@@ -26,6 +26,7 @@ class Service(geomodels.Model):
     bbox = geomodels.PolygonField(null=True,blank=True)
     getmapurl = models.CharField(max_length=512,blank=True)
     getmapformats = models.CharField(max_length=255,blank=True)
+    getmapcrs = models.TextField(blank=True)
     abstract = models.TextField(null=True,blank=True)
     keywords = models.CharField(max_length=512,null=True,blank=True)
     

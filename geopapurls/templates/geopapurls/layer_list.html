@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "admin/base_site.html" %}
 
+{% block content_title %}<span class="navbar-brand">Layers</span>{% endblock %}
 {% block content %}
-    <h2>Layers</h2>
     <ul>
         {% for layer in layer_list %}
-            <li>{{layer.title}}&nbsp&nbsp&nbsp<a href="/mapurls/{{ layer.id }}">>></a></li>
+            <li>{{layer.title}}&nbsp&nbsp&nbsp<a href="/mapurls/{{ layer.id }}/preview">Preview</a>&nbsp<a href="/mapurls/{{ layer.id }}">Mapurl</a>&nbsp<a href="/mapurls/{{ layer.id }}/download">Download</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "admin/base_site.html" %}
 {% block extrastyle %} 
 	{{ block.super }}
 	<link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.13.1/theme/default/style.css" type="text/css">
 	<link rel="stylesheet" href="{{STATIC_URL}}geopapurls/css/preview.css" type="text/css">
 {% endblock %}
-{% block extrajs %} 
+{% block extrahead %} 
 	{{ block.super }}
 	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"></script>
 	<script type="text/javascript">
@@ -25,6 +25,8 @@
         })
     </script>
 {% endblock %}
+
+{% block content_title %}<span class="navbar-brand">Layer preview</span>{% endblock %}
 {% block content %}
     <h2>Layer preview</h2>
     <h3>{{ object.title }}</h3>
