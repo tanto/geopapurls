@@ -109,6 +109,8 @@ DATABASES = {
     'default': dj_database_url.parse(os.environ['DATABASE_URL'])
 }
 
+LOGIN_URL = os.environ['LOGIN_URL']
+LOGOUT_NEXT_PAGE = os.environ['LOGOUT_NEXT_PAGE']
 ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split()
 SECRET_KEY = os.environ['SECRET_KEY']
 
