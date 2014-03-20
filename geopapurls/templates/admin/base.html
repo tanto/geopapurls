@@ -66,6 +66,7 @@
                 <div class="navbar-collapse collapse ">
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'layers-list' %}">{% trans 'Layers' %}</a></li>
+                        <li><a href="{% url 'admin:geopapurls_service_changelist' %}">{% trans 'Admin' %}</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         {% if user.is_active and user.is_staff %}
