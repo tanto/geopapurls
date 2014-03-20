@@ -10,7 +10,7 @@ crs_3857 = 'EPSG:3857'
 
 class WMSField(models.CharField):
     def is_urlbase(self,value):
-        not_base_contents = ['service=wms','request=']
+        not_base_contents = ['service=','request=']
         for nbc in not_base_contents:
             if nbc in value.lower():
                 raise ValidationError("Please supply a base URL, not a request",code="invalid")
