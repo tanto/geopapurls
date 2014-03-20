@@ -3,3 +3,4 @@
 .pydevproject
 config
 tmp
+db.db

@@ -9,11 +9,24 @@ crs_4326 = 'EPSG:4326'
 crs_3857 = 'EPSG:3857'
 
 class WMSField(models.CharField):
-    def validate(self,value,obj):
+    def is_urlbase(self,value):
+        not_base_contents = ['service=wms','request=']
+        for nbc in not_base_contents:
+            if nbc in value.lower():
+                raise ValidationError("Please supply a base URL, not a request",code="invalid")
+    
+    def parse(self,value,obj):
         try:
             obj.wms = parse_wms(value)
         except:
             raise ValidationError("The supplied URL is not valid",code="invalid")
+    
+    def validate(self,value,obj):
+        try:
+            self.is_urlbase(value)
+            self.parse(value, obj)
+        except Exception,e:
+            raise e
 
 # for South custom field management
 try: 
@@ -53,7 +66,8 @@ class Service(geomodels.Model):
     getmapformats = models.CharField(max_length=255,blank=True)
     abstract = models.TextField(null=True,blank=True)
     keywords = models.CharField(max_length=512,null=True,blank=True)
-    
+    force_4326_support = models.BooleanField(verbose_name="Supports WGS84",default=False,blank=True)
+    force_3857_support = models.BooleanField(verbose_name="Supports Google Mercator",default=False,blank=True)
     objects = geomodels.GeoManager()
     
     def __init__(self, *args, **kwargs):
@@ -86,16 +100,17 @@ class Service(geomodels.Model):
                 return f
             
     def clean(self, *args, **kwargs):
-        self.prepare_layers_to_save()
-        if not len(self.layers_to_save):
-            raise ValidationError('No layer supports WGS84 ot Google Mercator projection') 
+        if self.wms:
+            self.prepare_layers_to_save()
+            if not len(self.layers_to_save):
+                raise ValidationError('No layer supports WGS84 ot Google Mercator projection') 
         super(Service,self).clean(*args, **kwargs)
         
     def prepare_layers_to_save(self):
         for layer in self.wms.contents:
             crsoptions = self.wms[layer].crsOptions
-            supports_4326 = crs_4326 in crsoptions
-            supports_3857 = crs_3857 in crsoptions
+            supports_4326 = crs_4326 in crsoptions or self.force_4326_support
+            supports_3857 = crs_3857 in crsoptions or self.force_3857_support
             # we only support services with WGS84 and/or Google Mercator enabled
             if supports_4326 or supports_3857:
                 self.layers_to_save.append(self.wms[layer])
@@ -109,8 +124,8 @@ class Service(geomodels.Model):
                 layer_obj = Layer()
                 crsoptions = layer.crsOptions
                 layer_obj.crs = ' '.join(crsoptions)
-                supports_4326 = crs_4326 in crsoptions
-                supports_3857 = crs_3857 in crsoptions
+                supports_4326 = crs_4326 in crsoptions or self.force_4326_support
+                supports_3857 = crs_3857 in crsoptions or self.force_3857_support
                 layer_obj.supports_4326 = supports_4326
                 layer_obj.supports_3857 = supports_3857
                 layer_obj.title = layer.title
