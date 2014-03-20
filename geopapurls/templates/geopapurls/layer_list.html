@@ -2,9 +2,30 @@
 
 {% block content_title %}<span class="navbar-brand">Layers</span>{% endblock %}
 {% block content %}
-    <ul>
-        {% for layer in layer_list %}
-            <li>{{layer.title}}&nbsp&nbsp&nbsp<a href="/mapurls/{{ layer.id }}/preview">Preview</a>&nbsp<a href="/mapurls/{{ layer.id }}">Mapurl</a>&nbsp<a href="/mapurls/{{ layer.id }}/download">Download</a></li>
-        {% endfor %}
-    </ul>
+<div class="table-responsive">
+<table class="table table-striped table-condensed">
+	<tbody>
+		<tr>
+		    <th>Servizio</th>
+		    <th>Titolo</th>
+		    <th>CRS</th>
+		    <th class="text-right">Gestione</th>
+  		</tr>
+  		{% for layer in layer_list %}
+  		<tr>
+      		<td>{{ layer.service.name }}</td>
+		    <td>{{ layer.title }}</td>
+		    <td>{{ layer.supported_crs }}</td>
+		    <td class="text-right">
+				<a href="/mapurls/{{ layer.id }}/preview" target="_blank">Preview</a>&nbsp
+				{% if layer.supports_4326 %}
+				<a href="/mapurls/{{ layer.id }}" target="_blank">Mapurl</a>&nbsp
+				<a href="/mapurls/{{ layer.id }}/download" target="_blank">Download</a>
+				{% endif %}
+    		</td>
+  		</tr>
+  		{% endfor %}
+	</tbody>
+</table>
+</div>
 {% endblock %}

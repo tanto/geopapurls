@@ -1,0 +1,5 @@
+.alert-error {
+    background-image: linear-gradient(to bottom, #F2DEDE 0px, #E7C3C3 100%);
+    background-repeat: repeat-x;
+    border-color: #DCA7A7;
+}

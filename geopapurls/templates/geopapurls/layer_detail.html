@@ -12,23 +12,38 @@
         $('document').ready(function(){
         	var WGS84 = new OpenLayers.Projection("EPSG:4326");
 			var GM = new OpenLayers.Projection("EPSG:3857");
-        
-            map = new OpenLayers.Map('map',{projection:"EPSG:3857"});
+			var is_mercator = {{ object.supports_3857|yesno:"true,false" }};
+			var projection = null;
+			var layers = Array();
+        	{% if object.supports_3857 %}
+        		projection = GM.projCode
+        	{% else %}
+        		projection = WGS84.projCode;
+        	{% endif %}
+            map = new OpenLayers.Map('map',{projection:projection});
             map.addControl(new OpenLayers.Control.LayerSwitcher());
-			osm = new OpenLayers.Layer.OSM()
+            if (is_mercator){
+				osm = new OpenLayers.Layer.OSM();
+				layers.push(osm);
+			}
+			var layer_wms_is_base_layer = !is_mercator;
             var layer_wms = new OpenLayers.Layer.WMS("{{ object.title }}",
             									"{{ object.service.getmapurl }}",
 						            		{layers:"{{ object.name }}",format:"image/png",transparent:true},
-						            		{isBaseLayer:false,singleTile: true});
-            map.addLayers([osm,layer_wms]);
-            map.zoomToExtent(new OpenLayers.Bounds({{ bounds_xmin }},{{ bounds_ymin }},{{ bounds_xmax }},{{ bounds_ymax }}).transform(WGS84, GM));
+						            		{isBaseLayer:layer_wms_is_base_layer,singleTile: true,projection:projection});
+			layers.push(layer_wms)
+            map.addLayers(layers);
+            var mapbounds = new OpenLayers.Bounds({{ bounds_xmin }},{{ bounds_ymin }},{{ bounds_xmax }},{{ bounds_ymax }});
+            if (is_mercator){
+            	mapbounds = mapbounds.transform(WGS84, GM);
+            }
+            map.zoomToExtent(mapbounds);
         })
     </script>
 {% endblock %}
 
 {% block content_title %}<span class="navbar-brand">Layer preview</span>{% endblock %}
 {% block content %}
-    <h2>Layer preview</h2>
-    <h3>{{ object.title }}</h3>
+    <h3>[{{ object.service.name }}] {{ object.title }}</h3>
     <div id="map" class="mediummap"></div>
 {% endblock %}

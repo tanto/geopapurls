@@ -28,9 +28,13 @@ def home(request):
 class CommonListView(ListView):
     model = Layer
     
-    def filter_queryset(self,request):
-        queryset = self.get_queryset()
-        results_per_page = settings.MAX_RESULTS_PER_PAGE
+    def get_queryset(self):
+        queryset = super(CommonListView,self).get_queryset()
+        request = self.request
+        specific_filter = getattr(self.__class__,'specific_filer',None)
+        if specific_filter:
+            queryset = queryset.filter(specific_filter)
+        results_per_page = getattr(self.__class__,'max_res_per_page',None) or settings.MAX_RESULTS_PER_PAGE
         offset = 0
         query = request.GET
         p = query.get('p',None)
@@ -51,7 +55,7 @@ class CommonListView(ListView):
         if query_limit:
             try:
                 limit = int(query_limit)
-                results_per_page = min(limit,settings.MAX_RESULTS_PER_PAGE)
+                results_per_page = min(limit,results_per_page)
             except:
                 pass
         query_offset = query.get('o',None)
@@ -70,17 +74,14 @@ class CommonListView(ListView):
         return url
 
 class LayersView(CommonListView):
-    pass
-
-    def get_context_data(self, **kwargs):
-        context = super(LayersView, self).get_context_data(**kwargs)
-        #context['getmapurl'] = 
-        return context
+    max_res_per_page = 10000000
 
 class MapurlsView(CommonListView):
+    # For Geopaparazzi mapurls we only support WGS84 enabled services
+    specific_filer = Q(supports_4326=True)
    
     def get(self,request):
-        layers = self.filter_queryset(request).all()
+        layers = self.get_queryset().all()
         print len(layers)
         layers_list = []
         for layer in layers:
