@@ -4,3 +4,4 @@
 config
 tmp
 db.db
+local_settings.py

@@ -1,9 +1,18 @@
+import os
+import logging
 from django.db import models
+from django.db.models.signals import post_save
+from django.conf import settings
+from django.dispatch import receiver
+from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 from django.contrib.gis.db import models as geomodels
 from django.contrib.gis.geos.polygon import Polygon
-from django.core.validators import URLValidator
 from owsparser import parse_wms
+
+logger = logging.getLogger(__name__)
     
 preferred_formats = ['image/png', 'image/jpeg', 'image/geotiff', 'image/tiff']
 crs_4326 = 'EPSG:4326'
@@ -160,5 +169,16 @@ class Suggestion(models.Model):
     
     def __repr__(self):
         return self.url
+
+@receiver(post_save, sender=Suggestion)
+def log_suggestion_save(sender, **kwargs):
+    if len(settings.ADMINS)>0 and settings.SERVER_EMAIL and settings.EMAIL_HOST!='':
+        curr_site = Site.objects.get_current()
+        to = [e[1] for e in settings.ADMINS]
+        from_email = settings.SERVER_EMAIL
+        suggestion_url = "%s%s%s" % (curr_site,reverse('admin:geopapurls_suggestion_changelist'),str(kwargs['instance'].pk))
+        message = '%s\n%s' % (kwargs['instance'].url,suggestion_url)
+        send_mail('[Geopapurls] A new suggestion was submitted',message,from_email,to,fail_silently=True)
+        #logger.info("%s suggestion was sent" % kwargs['instance'].url)
     
 

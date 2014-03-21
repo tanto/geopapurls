@@ -6,7 +6,7 @@ DEBUG = bool(os.environ.get('DEBUG', False))
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = ()
-
+SERVER_EMAIL = None
 MANAGERS = ADMINS
 
 TIME_ZONE = 'America/Chicago'
@@ -82,6 +82,11 @@ INSTALLED_APPS = (
     'geopapurls',
 )
 
+EMAIL_HOST = ''
+EMAIL_PORT = 25
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD =None
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -95,6 +100,15 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'suggested_services': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/home/giova/Desktop/suggestions_arrived.log',
+        },
+         'suggested_services_email': {
+            'level': 'INFO',
+            'class': 'django.utils.log.AdminEmailHandler'
         }
     },
     'loggers': {
@@ -103,6 +117,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'geopapurls': {
+            'handlers': ['suggested_services_email'],
+            'level': 'INFO',
+            'propagate': True,
+        }
     }
 }
 
@@ -116,3 +135,8 @@ ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split()
 SECRET_KEY = os.environ['SECRET_KEY']
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 MAX_RESULTS_PER_PAGE = int(os.environ['MAX_RESULTS_PER_PAGE'])
+
+try:
+    from local_settings import *
+except:
+    pass
