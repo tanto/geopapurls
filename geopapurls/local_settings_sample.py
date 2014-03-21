@@ -29,11 +29,6 @@ LOGGING = {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
-        },
-        'geopapurls': {
-            'handlers': ['suggested_services_email'],
-            'level': 'INFO',
-            'propagate': True,
         }
     }
 }
