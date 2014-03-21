@@ -78,6 +78,7 @@ class CommonListView(ListView):
 
 class LayersView(CommonListView):
     max_res_per_page = 10000000
+    paginate_by = settings.MAX_RESULTS_PER_PAGE
 
 class MapurlsView(CommonListView):
     # For Geopaparazzi mapurls we only support WGS84 enabled services
