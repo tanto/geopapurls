@@ -1,0 +1,18 @@
+{% extends 'geopapurls/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block header %}
+<div class="page-header">
+  <h1><img src="{{ STATIC_URL }}geopapurls/img/geopapicon.png" id="geopap_logo"/>Geopapurls - WMS services for <a href="http://geopaparazzi.github.io/geopaparazzi/" target="_blank">Geopaparazzi</a></h1>
+</div>
+{% endblock %}
+{% block jumbo %}
+<div class="jumbotron">
+  <h2><b>Suggest a WMS you would like to see on Geopaparazzi!</b></h2>
+  <p>Here you can suggest a WMS Service base URL to be added to Geopapurls. A <b>base URL</b> must be provided, without request parameters.</p>
+  <p>Only services supporting WGS84 (and Google Mercator) coordinate reference system will be accepted.
+</div>
+{% endblock %}
+{% block content %}
+{% crispy form %}
+{% endblock %}

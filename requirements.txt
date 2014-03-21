@@ -1,4 +1,5 @@
 django<1.7
 dj-database-url
+django-crispy-forms
 south==0.8.4
 owslib

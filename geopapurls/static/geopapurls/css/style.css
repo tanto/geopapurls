@@ -1,3 +1,52 @@
+* {margin:0;padding:0;} 
+
+html,
+body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -40px;
+}
+
+#push {
+  height: 50px;
+}
+#footer {
+  background-color: #eee;
+  line-height: 40px;
+  height: 40px;
+}
+
+#footer p {
+	margin: 0;
+}
+
+
+@media (max-width: 767px) {
+	#footer {
+	  margin-left: -20px;
+	  margin-right: -20px;
+	  padding-left: 20px;
+	  padding-right: 20px;
+	}
+}
+
+#geopap_logo{
+	height:120px;
+}
+
+#credit{
+	display:inline;
+}
+
+.socialicon {
+	padding-left: 20px;
+}
+      
 .alert-error {
     background-image: linear-gradient(to bottom, #F2DEDE 0px, #E7C3C3 100%);
     background-repeat: repeat-x;

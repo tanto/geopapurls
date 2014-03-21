@@ -48,5 +48,15 @@ class LayerAdmin(OSMGeoAdmin):
     
     list_display = ('admintitle',)
     
+class SuggestionAdmin(admin.ModelAdmin):
+    model = Suggestion
+    
+    def admintitle(self,obj):
+        return ("%s" % obj.url)
+    admintitle.short_description = 'Servizi suggeriti'
+    
+    list_display = ('admintitle',)
+    
 admin.site.register(Service,ServiceAdmin)
 admin.site.register(Layer,LayerAdmin)
+admin.site.register(Suggestion,SuggestionAdmin)

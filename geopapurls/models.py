@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models as geomodels
 from django.contrib.gis.geos.polygon import Polygon
+from django.core.validators import URLValidator
 from owsparser import parse_wms
     
 preferred_formats = ['image/png', 'image/jpeg', 'image/geotiff', 'image/tiff']
@@ -151,3 +152,13 @@ class Service(geomodels.Model):
         if wms.getOperationByName('GetMap').methods.get('Get',None):
             self.getmapurl = wms.getOperationByName('GetMap').methods['Get']['url']
         self.getmapformats = ' '.join(wms.getOperationByName('GetMap').formatOptions)
+        
+class Suggestion(models.Model):
+    url = models.URLField(verbose_name='Service URL',max_length=512)
+    email = models.EmailField(verbose_name='Your email',null=True,blank=True)
+    notes = models.TextField(null=True,blank=True)
+    
+    def __repr__(self):
+        return self.url
+    
+

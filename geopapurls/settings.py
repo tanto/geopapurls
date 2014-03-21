@@ -77,6 +77,7 @@ INSTALLED_APPS = (
     'south',
     'django_admin_bootstrapped.bootstrap3',
     'django_admin_bootstrapped',
+    'crispy_forms',
     'django.contrib.admin',
     'geopapurls',
 )
@@ -113,5 +114,5 @@ LOGIN_URL = os.environ['LOGIN_URL']
 LOGOUT_NEXT_PAGE = os.environ['LOGOUT_NEXT_PAGE']
 ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split()
 SECRET_KEY = os.environ['SECRET_KEY']
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 MAX_RESULTS_PER_PAGE = int(os.environ['MAX_RESULTS_PER_PAGE'])

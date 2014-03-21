@@ -1,0 +1,28 @@
+{% load admin_static bootstrapped_goodies_tags %}{% load url from future %}
+{% load i18n%}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+    <title>Geopapurls - Suggest a WMS service to add</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet"/>
+	<link href="{% static "bootstrap/css/bootstrap-theme.min.css" %}" rel="stylesheet"/>
+	<link href="{% static "geopapurls/css/style.css" %}" rel="stylesheet"/>
+</head>
+<body>
+	<div id="wrap">
+		<div class="container">
+			{% block header %}{% endblock %}
+			{% block jumbo %}{% endblock %}
+			{% block content %}{% endblock %}
+		</div>
+		<div id="push"></div>
+	</div>
+	<div id="footer">
+      <div class="container">
+        <p id="credit">Geopapurls is offered by <a href="http://blog.spaziogis.it" target="_blank">TANTO</a> - &copy; 2014 <a href="http://about.me/giovanniallegri" target="_blank">Giovanni Allegri</a></p>
+      	<a href="https://twitter.com/twanto" target="_blank"><img class="socialicon" src="{% static "geopapurls/img/twitter.png" %}"/></a>
+      	<a href="https://github.com/tanto/geopapurls" target="_blank"><img class="socialicon" src="{% static "geopapurls/img/github.png" %}"/></a>
+      </div>
+    </div>
+</body>

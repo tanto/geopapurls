@@ -2,11 +2,14 @@ import json
 from cStringIO import StringIO
 from django.core.servers.basehttp import FileWrapper
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView
 from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponse
-from models import Layer
+from models import Layer,Suggestion
+from forms import SuggestForm
+from django.views.generic.edit import CreateView
        
 mapurl_template = '''url={url}
 minzoom=11
@@ -23,7 +26,7 @@ mbtiles=wmslayers/_tanto_{uid}.mbtiles
 url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
 
 def home(request):
-    return redirect('layers-list')
+    return redirect('suggest')
 
 class CommonListView(ListView):
     model = Layer
@@ -147,5 +150,13 @@ class MapurlDetailView(DetailView):
         mapurl_dict['description'] = self.object.name
         mapurl_dict['uid'] = self.object.pk
         return mapurl_template.format(**mapurl_dict)
+    
+class SuggestView(CreateView):
+    model = Suggestion
+    form_class = SuggestForm
+    template_name = 'geopapurls/suggest.html'
+    
+    def get_success_url(self):
+        return reverse('thanks')
         
     
