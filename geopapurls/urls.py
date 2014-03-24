@@ -9,6 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'geopapurls.views.home', name='home'),
     url(r'^admin/', include(admin.site.urls)),
+    #url(r'^layers/$',login_required(LayersView.as_view()),name='layers-list'),
     url(r'^layers/$',login_required(LayersView.as_view()),name='layers-list'),
     url(r'^mapurls/$',MapurlsView.as_view()),
     url(r'^mapurls/(?P<pk>\d+)/(?P<action>[a-zA-Z]+)?$',MapurlDetailView.as_view()),
