@@ -163,9 +163,11 @@ class Service(geomodels.Model):
         self.getmapformats = ' '.join(wms.getOperationByName('GetMap').formatOptions)
         
 class Suggestion(models.Model):
+    title = models.CharField(max_length=255)
     url = models.URLField(verbose_name='Service URL',max_length=512)
     email = models.EmailField(verbose_name='Your email',null=True,blank=True)
     notes = models.TextField(null=True,blank=True)
+    done = models.BooleanField(default=False,blank=True)
     
     def __repr__(self):
         return self.url
