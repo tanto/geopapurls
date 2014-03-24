@@ -17,6 +17,8 @@ import os
 import sys
 import glob
 
+os.chdir('/home/apps/geopapurls')
+
 if 'test' in sys.argv:
     env_dir = os.path.join('tests', 'config')
 else:
@@ -28,7 +30,7 @@ for env_var in env_vars:
         val = env_var_file.read().strip()
         os.environ.setdefault(key,val)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'geopapurls.settings'
-
+sys.path.append('/home/apps/geopapurls')
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 

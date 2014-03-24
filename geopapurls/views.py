@@ -83,7 +83,8 @@ class LayersView(CommonListView):
 class MapurlsView(CommonListView):
     # For Geopaparazzi mapurls we only support WGS84 enabled services
     specific_filer = Q(supports_4326=True)
-   
+    max_res_per_page = 10000000    
+
     def get(self,request):
         layers = self.get_queryset().all()
         print len(layers)
