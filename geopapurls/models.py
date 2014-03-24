@@ -46,7 +46,7 @@ except:
     pass
 
 class Layer(geomodels.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,unique=True)
     title = models.CharField(max_length=512)
     abstract = models.TextField(null=True)
     bbox = geomodels.PolygonField(null=True)
@@ -70,7 +70,7 @@ class Layer(geomodels.Model):
 
 class Service(geomodels.Model):
     name = models.CharField(max_length=255)
-    url = WMSField(max_length=512)
+    url = WMSField(max_length=512,unique=True)
     bbox = geomodels.PolygonField(null=True,blank=True)
     getmapurl = models.CharField(max_length=512,blank=True)
     getmapformats = models.CharField(max_length=255,blank=True)
