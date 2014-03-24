@@ -3,3 +3,4 @@ dj-database-url
 django-crispy-forms
 south==0.8.4
 owslib
+https://github.com/riccardo-forina/django-admin-bootstrapped/archive/master.zip
