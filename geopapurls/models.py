@@ -1,5 +1,7 @@
 import os
 import logging
+from urlparse import urlparse
+from django.utils.text import slugify
 from django.db import models
 from django.db.models.signals import post_save
 from django.conf import settings
@@ -69,8 +71,9 @@ class Layer(geomodels.Model):
 
 
 class Service(geomodels.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,blank=True)
     url = WMSField(max_length=512,unique=True)
+    source = models.CharField(max_length=255,null=True,blank=True)
     bbox = geomodels.PolygonField(null=True,blank=True)
     getmapurl = models.CharField(max_length=512,blank=True)
     getmapformats = models.CharField(max_length=255,blank=True)
@@ -156,15 +159,27 @@ class Service(geomodels.Model):
             super(Service,self).save(force_insert,force_update,using,update_fields)
         
     def set_service_metadata(self,wms):
+        if self.name is None or self.name == '':
+            self.name = self.make_name(wms)
         self.abstract = wms.identification.abstract
         self.keywords = ' '.join(wms.identification.keywords)
         if wms.getOperationByName('GetMap').methods.get('Get',None):
             self.getmapurl = wms.getOperationByName('GetMap').methods['Get']['url']
         self.getmapformats = ' '.join(wms.getOperationByName('GetMap').formatOptions)
         
+    def make_name(self,wms):
+        try:
+            name = wms.identification.title
+        except:
+            u = urlparse(self.url)
+            name = slugify(u.path)
+        return name
+            
+        
 class Suggestion(models.Model):
     title = models.CharField(max_length=255)
     url = models.URLField(verbose_name='Service URL',max_length=512)
+    source= models.CharField(max_length=255,null=True,blank=True)
     email = models.EmailField(verbose_name='Your email',null=True,blank=True)
     notes = models.TextField(null=True,blank=True)
     done = models.BooleanField(default=False,blank=True)

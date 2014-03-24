@@ -8,7 +8,7 @@ from models import Suggestion
 class SuggestForm(forms.ModelForm):
     class Meta:
         model = Suggestion
-        fields = ("title", "url", "email", "notes")
+        fields = ("title", "url", "source", "email", "notes")
 
     def __init__(self, *args, **kwargs):
 
@@ -22,7 +22,7 @@ class SuggestForm(forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 'WMS service suggestion',
-                'title','url', 'email', 'notes',
+                'title','url', 'source', 'email', 'notes',
             ),
             ButtonHolder(
                 Submit('save', 'Send', css_class='btn btn-large btn-primary pull-right')
