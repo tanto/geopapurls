@@ -50,7 +50,7 @@ except:
 class Layer(geomodels.Model):
     name = models.CharField(max_length=255)
     title = models.CharField(max_length=512)
-    abstract = models.TextField(null=True)
+    abstract = models.TextField(null=True,blank=True)
     bbox = geomodels.PolygonField(null=True)
     #max_scale = models.FloatField(null=True,blank=True)
     #min_scale = models.FloatField(null=True,blank=True)

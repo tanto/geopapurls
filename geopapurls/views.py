@@ -4,12 +4,12 @@ from django.core.servers.basehttp import FileWrapper
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView
 from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponse
-from models import Layer,Suggestion
+from models import Layer,Suggestion,Service
 from forms import SuggestForm
-from django.views.generic.edit import CreateView
        
 mapurl_template = '''url={url}
 minzoom=11
@@ -160,5 +160,10 @@ class SuggestView(CreateView):
     
     def get_success_url(self):
         return reverse('thanks')
+    
+    def get_context_data(self, **kwargs):
+        context = super(SuggestView,self).get_context_data(**kwargs)
+        context['services'] = Service.objects.only('source').filter(source__isnull=False)
+        return context
         
     

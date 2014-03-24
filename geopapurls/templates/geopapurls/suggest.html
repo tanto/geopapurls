@@ -1,6 +1,14 @@
 {% extends 'geopapurls/base.html' %}
 {% load crispy_forms_tags %}
-
+{% block extrajs %}
+<script src="{{ STATIC_URL }}geopapurls/js/suggest.js" type="text/javascript"></script>
+<script>
+var availableSources = [];
+{% for service in services %}
+	availableSources.push({{ service.source }});
+{% endfor %}
+</script>
+{% endblock %}
 {% block header %}
 <div class="page-header">
   <h1><img src="{{ STATIC_URL }}geopapurls/img/geopapicon.png" id="geopap_logo"/>Geopapurls - WMS services for <a href="http://geopaparazzi.github.io/geopaparazzi/" target="_blank">Geopaparazzi</a></h1>
