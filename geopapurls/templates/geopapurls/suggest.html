@@ -1,13 +1,13 @@
 {% extends 'geopapurls/base.html' %}
 {% load crispy_forms_tags %}
 {% block extrajs %}
-<script src="{{ STATIC_URL }}geopapurls/js/suggest.js" type="text/javascript"></script>
-<script>
+<script type="text/javascript">
 var availableSources = [];
 {% for service in services %}
-	availableSources.push({{ service.source }});
+availableSources.push('{{ service.source }}');
 {% endfor %}
 </script>
+<script src="{{ STATIC_URL }}geopapurls/js/suggest.js" type="text/javascript"></script>
 {% endblock %}
 {% block header %}
 <div class="page-header">
