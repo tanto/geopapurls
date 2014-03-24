@@ -32,7 +32,7 @@ class CommonListView(ListView):
     model = Layer
     
     def get_queryset(self):
-        queryset = super(CommonListView,self).get_queryset()
+        queryset = super(CommonListView,self).get_queryset().order_by('-id')
         request = self.request
         specific_filter = getattr(self.__class__,'specific_filer',None)
         if specific_filter:
