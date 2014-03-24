@@ -46,7 +46,7 @@ except:
     pass
 
 class Layer(geomodels.Model):
-    name = models.CharField(max_length=255,unique=True)
+    name = models.CharField(max_length=255)
     title = models.CharField(max_length=512)
     abstract = models.TextField(null=True)
     bbox = geomodels.PolygonField(null=True)
