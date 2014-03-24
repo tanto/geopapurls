@@ -56,6 +56,7 @@ class SuggestionAdmin(admin.ModelAdmin):
     admintitle.short_description = 'Servizi suggeriti'
     
     list_display = ('admintitle',)
+    list_filter = ('done',)
     
 admin.site.register(Service,ServiceAdmin)
 admin.site.register(Layer,LayerAdmin)
