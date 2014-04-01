@@ -52,8 +52,8 @@ class Layer(geomodels.Model):
     title = models.CharField(max_length=512)
     abstract = models.TextField(null=True,blank=True)
     bbox = geomodels.PolygonField(null=True)
-    #max_scale = models.FloatField(null=True,blank=True)
-    #min_scale = models.FloatField(null=True,blank=True)
+    max_scale = models.FloatField(null=True,blank=True)
+    min_scale = models.FloatField(null=True,blank=True)
     crs = models.TextField(blank=True)
     supports_4326 = models.BooleanField(default=False)
     supports_3857 = models.BooleanField(default=False)
@@ -148,7 +148,6 @@ class Service(geomodels.Model):
                     layer_obj.min_scale = layer.scaleHint.get('min',None)
                     layer_obj.max_scale = layer.scaleHint.get('max',None)
                 layer_bbox = layer.boundingBoxWGS84
-                print layer_bbox
                 overall_bbox = self.extend_bbox(layer_bbox, overall_bbox)
                 layer_obj.bbox = self.make_polybbox(layer_bbox)
                 layers.append(layer_obj)

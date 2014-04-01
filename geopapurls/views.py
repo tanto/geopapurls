@@ -10,10 +10,11 @@ from django.db.models import Q
 from django.http import HttpResponse
 from models import Layer,Suggestion,Service
 from forms import SuggestForm
+from owsparser import RESOLUTIONS
        
 mapurl_template = '''url={url}
-minzoom=11
-maxzoom=22
+minzoom={minzoom}
+maxzoom={maxzoom}
 center= {x_center} {y_center}
 type=wms
 format={format}
@@ -152,10 +153,27 @@ class MapurlDetailView(DetailView):
         mapurl_dict['x_center'] = self.object.bbox.centroid.x
         mapurl_dict['y_center'] = self.object.bbox.centroid.y
         mapurl_dict['bbox'] = ' '.join(map(str,self.object.bbox.extent))
+        zooms = self.calc_zooms(self.object.min_scale,self.object.max_scale)
+        mapurl_dict['minzoom'] = zooms[0]
+        mapurl_dict['maxzoom'] = zooms[1]
         mapurl_dict['format'] = self.object.service.get_preferred_format().replace('image/','')
         mapurl_dict['description'] = self.object.name
         mapurl_dict['uid'] = self.object.pk
         return mapurl_template.format(**mapurl_dict)
+    
+    def calc_zooms(self,mins,maxs):
+        min_zoom = 11
+        max_zoom = 22
+        min_zoom_found = False
+        if mins or maxs:
+            for i,r in enumerate(RESOLUTIONS):
+                if mins is not None and (r > mins):
+                    max_zoom = i
+                if maxs is not None and not min_zoom_found and (r < maxs):
+                    min_zoom = i
+                    min_zoom_found = True
+        return min_zoom,max_zoom
+
     
 class SuggestView(CreateView):
     model = Suggestion
