@@ -26,7 +26,11 @@ mbtiles=wmslayers/_tanto_{uid}.mbtiles
 url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
 
 def home(request):
-    return redirect('suggest')
+    if hasattr(settings,'HOME_REDIRECT_URL'):
+        arg = settings.HOME_REDIRECT_URL
+    else:
+        arg = 'suggest'
+    return redirect(arg)
 
 class CommonListView(ListView):
     model = Layer
