@@ -172,6 +172,7 @@ class MapurlDetailView(DetailView):
                 if maxs is not None and not min_zoom_found and (r < maxs):
                     min_zoom = i
                     min_zoom_found = True
+        min_zoom = min_zoom if min_zoom >= 11 else 11
         return min_zoom,max_zoom
 
     
