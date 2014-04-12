@@ -2,7 +2,6 @@ define('LayerCtrl',{
 	endUrl: '/mapurls',
 	dataTabledata: [],
 	getlayers: function(substring){
-		//if (typeof substring != 'undefined'){
 		this.load();
 	},
 	load: function(){
@@ -13,31 +12,26 @@ define('LayerCtrl',{
 		})
 	},
 	success: function(data){
-		this.convert(data);
-		var a = 1;
-	},
-	convert: function(data){
-		var _this = this;
-		$(data).each(function(){ // itero sugli oggetti layer
-			var layer = [];
-			$.each(this,function(k,v){
-				layer.push(v); // appendo il valore di ogni attributo dell'oggetto
-			})
-			_this.dataTabledata.push(layer);
-			//console.log(this.title);
-		})
+		this.dataTabledata = data;
 	},
 	renderdata: function(){
 		var tableEl = $('#layersDataTable');
 		tableEl.dataTable({
+			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+				var layer_id = aData['id'];
+				var actions = '<a href="/mapurls/'+layer_id+'/preview" target="_blank">Preview</a>&nbsp \
+								<a href="/mapurls/'+layer_id+'" target="_blank">Mapurl</a>&nbsp \
+								<a href="/mapurls/'+layer_id+'/download" target="_blank">Download</a>';
+	            $('td:eq(2)', nRow).html(actions);
+	        },
 			"iDisplayLength": 25,
 	        "bProcessing": true,
 	        "bLengthChange": false,
 	        "aaSorting": [[ 1, "asc" ]],
 	        "aoColumns": [
-		      {"bSearchable": false,"bSortable":false},
-		      {"bSearchable": true},
-		      {"bSearchable": true}
+		      {"mDataProp": "service","bSearchable": true,"sWidth": "15%" },
+		      {"mDataProp": "title","bSearchable": true,"sWidth": "65%" },
+		      {"mDataProp": "","bSearchable": false,"bSortable": false,"sWidth": "20%","sDefaultContent":"Preview","sClass": "center",}
 		    ],
 	        "aaData": this.dataTabledata
 		});
