@@ -24,7 +24,7 @@ description={description}
 mbtiles=wmslayers/_tanto_{uid}.mbtiles
 '''
 
-url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
+url_template = '{baseurl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS={layername}&STYLES=&SRS=EPSG:4326&FORMAT={imageformat}&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256'
 
 def home(request):
     if hasattr(settings,'HOME_REDIRECT_URL'):
@@ -150,6 +150,7 @@ class MapurlDetailView(DetailView):
     def make_from_template(self):
         mapurl_dict = {}
         baseurl = self.object.service.getmapurl if self.object.service.getmapurl else self.object.service.url
+        baseurl = baseurl.rstrip('?')
         mapurl_dict['url'] = url_template.format(**{'baseurl':baseurl,'layername':self.object.name,'imageformat':self.object.service.get_preferred_format()})
         mapurl_dict['x_center'] = self.object.bbox.centroid.x
         mapurl_dict['y_center'] = self.object.bbox.centroid.y
