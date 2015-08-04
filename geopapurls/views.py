@@ -33,11 +33,33 @@ def home(request):
         arg = 'suggest'
     return redirect(arg)
 
-class CommonListView(ListView):
+class LayersView(ListView):
     model = Layer
-    
+    paginate_by = settings.MAX_RESULTS_PER_PAGE
+    template_name_suffix = '_list_ajax'
+
+class MapurlsView(ListView):
+    # For Geopaparazzi mapurls we only support WGS84 enabled services
+    model = Layer
+    specific_filer = Q(supports_4326=True)
+    max_res_per_page = 10000000    
+
+    def get(self,request):
+        layers = self.get_queryset().all()
+        print len(layers)
+        layers_list = []
+        for layer in layers:
+            layer_dict = {}
+            layer_dict['id'] = layer.id
+            layer_dict['title'] = layer.title
+            layer_dict['service'] = layer.service.name
+            layers_list.append(layer_dict)
+
+        layers_json = json.dumps(layers_list)
+        return HttpResponse(layers_json, mimetype='application/json')
+        
     def get_queryset(self):
-        queryset = super(CommonListView,self).get_queryset().order_by('-id')
+        queryset = super(ListView,self).get_queryset().order_by('-id')
         request = self.request
         specific_filter = getattr(self.__class__,'specific_filer',None)
         if specific_filter:
@@ -80,30 +102,6 @@ class CommonListView(ListView):
         mapformat = layer.service.get_preferred_format()
         url = "%s?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=%s&SRS=EPSG:4326&FORMAT=%s&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256" % (service_url,layer.name,mapformat)
         return url
-
-class LayersView(CommonListView):
-    max_res_per_page = 10000000
-    paginate_by = settings.MAX_RESULTS_PER_PAGE
-    template_name_suffix = '_list_ajax'
-
-class MapurlsView(CommonListView):
-    # For Geopaparazzi mapurls we only support WGS84 enabled services
-    specific_filer = Q(supports_4326=True)
-    max_res_per_page = 10000000    
-
-    def get(self,request):
-        layers = self.get_queryset().all()
-        print len(layers)
-        layers_list = []
-        for layer in layers:
-            layer_dict = {}
-            layer_dict['id'] = layer.id
-            layer_dict['title'] = layer.title
-            layer_dict['service'] = layer.service.name
-            layers_list.append(layer_dict)
-
-        layers_json = json.dumps(layers_list)
-        return HttpResponse(layers_json, mimetype='application/json')
     
 
 class MapurlDetailView(DetailView):
