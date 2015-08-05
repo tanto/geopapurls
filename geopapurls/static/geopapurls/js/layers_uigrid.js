@@ -21,9 +21,9 @@ app.controller('MainCtrl', ['$scope', '$http','uiGridConstants', function ($scop
     
     $scope.gridOptions = {
         columnDefs : [
-            {headerName: "Service", field: "service",width: "40%",enableHiding : false},
-            {headerName: "Title", field: "title", width: "40%",enableHiding : false},
-            {headerName: 'Tools', field: "id", cellTemplate: '<a href="/mapurls/{{row.entity[\'id\']}}/preview" target="_blank">Preview</a>&nbsp \
+            {name: "Service", field: "service",width: "40%",enableHiding : false},
+            {name: "Title", field: "title", width: "40%",enableHiding : false},
+            {name: "Tools", field: "id", cellTemplate: '<a href="/mapurls/{{row.entity[\'id\']}}/preview" target="_blank">Preview</a>&nbsp \
 								<a href="/mapurls/{{row.entity[\'id\']}}" target="_blank">Mapurl</a>&nbsp \
 								<a href="/mapurls/{{row.entity[\'id\']}}/download" target="_blank">Download</a>',width: '20%',enableSorting:false,enableFiltering:false,enableHiding : false,enableColumnMenu:false}],
         paginationPageSizes: [25, 50, 100],
