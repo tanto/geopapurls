@@ -50,7 +50,7 @@ app.controller('MainCtrl', ['$scope', '$http','uiGridConstants', function ($scop
         var filterterms = [];
         angular.forEach(this.grid.columns,function(col,k){
             if (col.filters.length > 0 && col.filters[0].term != null){
-                filtercols.push(col.name);
+                filtercols.push(col.field);
                 filterterms.push(col.filters[0].term);
             }
         })
