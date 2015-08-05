@@ -45,8 +45,13 @@ class MapurlsView(ListView):
     max_res_per_page = 10000000    
 
     def get(self,request):
-        layers = self.get_queryset().all()
-        print len(layers)
+        data_json = self.build_json()
+        return HttpResponse(data_json, mimetype='application/json')
+        
+    def build_json(self):
+        queryset = self.get_queryset().order_by('-id')
+        queryset = self.set_paging_limits(queryset)
+        layers = queryset.all()
         layers_list = []
         for layer in layers:
             layer_dict = {}
@@ -56,17 +61,40 @@ class MapurlsView(ListView):
             layers_list.append(layer_dict)
 
         layers_json = json.dumps(layers_list)
-        return HttpResponse(layers_json, mimetype='application/json')
+        return layers_json
         
     def get_queryset(self):
-        queryset = super(ListView,self).get_queryset().order_by('-id')
-        request = self.request
+        query = self.request.GET
+        sortcol = 'id'
+        sc = query.get('sc',None)
+        if sc:
+            if sc == 'service':
+                sc = 'service__name'
+            sortcol = sc
+        sortdir = '-'
+        sd = query.get('sd',None)
+        if sd:
+            sortdir = ''
+            if sd == 'desc':
+                sortdir = '-'
+        ordering = sortdir+sortcol
+        queryset = super(ListView,self).get_queryset().order_by(ordering)
         specific_filter = getattr(self.__class__,'specific_filer',None)
         if specific_filter:
             queryset = queryset.filter(specific_filter)
-        results_per_page = getattr(self.__class__,'max_res_per_page',None) or settings.MAX_RESULTS_PER_PAGE
-        offset = 0
-        query = request.GET
+        filtercols = query.get('fc',None)
+        if filtercols:
+            filteropt = {}
+            cols = filtercols.split("!!!")
+            filterterms = query.get('ft',None)
+            if filterterms:
+                terms = filterterms.split("!!!")
+                for i,c in enumerate(cols):
+                    if c == 'service':
+                        c = 'service__name'
+                    filteropt[c+'__contains'] = terms[i]
+                    queryset = queryset.filter(**filteropt)
+                
         p = query.get('p',None)
         if p:
             try:
@@ -81,6 +109,12 @@ class MapurlsView(ListView):
             qtitle = Q(title__icontains=t)
             qabstract = Q(abstract__icontains=t)
             queryset = queryset.filter(qtitle | qabstract)
+        return queryset
+        
+    def set_paging_limits(self,queryset):
+        query = self.request.GET
+        results_per_page = getattr(self.__class__,'max_res_per_page',None) or settings.MAX_RESULTS_PER_PAGE
+        offset = 0
         query_limit = query.get('l',None)
         if query_limit:
             try:
@@ -102,6 +136,25 @@ class MapurlsView(ListView):
         mapformat = layer.service.get_preferred_format()
         url = "%s?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=%s&SRS=EPSG:4326&FORMAT=%s&BBOX=XXX,YYY,XXX,YYY&WIDTH=256&HEIGHT=256" % (service_url,layer.name,mapformat)
         return url
+        
+# For the layers web page I need the total number of rows, after filtering
+class MapurlsHtmlView(MapurlsView):
+    
+    def build_json(self):
+        queryset = self.get_queryset()
+        toturls = queryset.count()
+        queryset = self.set_paging_limits(queryset)
+        layers = queryset.all()
+        data = {'total':toturls,'data':[]}
+        for layer in layers:
+            layer_dict = {}
+            layer_dict['id'] = layer.id
+            layer_dict['title'] = layer.title
+            layer_dict['service'] = layer.service.name
+            data['data'].append(layer_dict)
+
+        data_json = json.dumps(data)
+        return data_json
     
 
 class MapurlDetailView(DetailView):

@@ -2,19 +2,23 @@
 {% load admin_static geopapurls_tags %}
 {% block content_title %}<span class="navbar-brand">Layers</span>{% endblock %}
 {% block extrahead %}
-<link rel="stylesheet" type="text/css" href="{% static 'geopapurls/css/jquery.dataTables.css' %}" />
-<script type='text/javascript' src="{% static 'geopapurls/js/jquery.dataTables.js' %}"></script>
-<script type='text/javascript' data-main="{% static 'geopapurls/js/layers.js' %}" src="{% static 'geopapurls/js/require.js' %}"></script>
+{% block extrastyle %}
+
+{% endblock %}
+<link href="{% static 'geopapurls/css/style.css' %}" rel="stylesheet"/>
+<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-touch.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.js"></script>
+<script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+<script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+<script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+<script src="http://ui-grid.info/release/ui-grid.js"></script>
+    <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css">
+<script type='text/javascript' src="{% static 'geopapurls/js/layers_uigrid.js' %}"></script>
 {% endblock %}
 {% block content %}
-<div class="table-responsive">
-<table class="table table-striped table-condensed" id='layersDataTable'>
-	<thead>
-    <th>Service</th><th>Description</th><th></th>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+<div ng-app="app" ng-controller="MainCtrl" style="height: 100%">
+    <div id="grid1" ui-grid="gridOptions" ui-grid-pagination style="height:600px"></div>
 </div>
 <p></p>
 {% endblock %}

@@ -53,4 +53,6 @@ body {
     border-color: #DCA7A7;
 }
 
-
+.ag-fresh .ag-header-container {
+    background: #ffffff
+}
