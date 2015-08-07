@@ -56,3 +56,32 @@ body {
 .ag-fresh .ag-header-container {
     background: #ffffff
 }
+
+.spatial-filter-box{
+    display: inline-block;
+}
+
+.spatial-filter-box .reset-button{
+    margin: 0px 20px 0px 20px;
+}
+
+.spatial-filter-coord-box{
+    display: inline-block;
+    line-height: 32px;
+    vertical-align: middle;
+    margin-left:20px
+}
+
+.spatial-filter-row {
+    margin-bottom: 20px;
+}
+
+.spatial-filter-coord{
+    line-height: 17px;
+}
+
+.spatial-filter-coord .sflabel{
+    width: 25px;
+    display: inline-block;
+    color: black
+}

@@ -104,6 +104,11 @@ class MapurlsView(ListView):
                 queryset = queryset.filter(bbox__contains="POINT(%s %s)" % (x,y))
             except:
                 pass
+        b = query.get('b',None)
+        if b:
+            bounds = b.split(',')
+            polywkt = self.make_poly(bounds)
+            queryset = queryset.filter(bbox__intersects="%s" % (polywkt))
         t = query.get('t',None)
         if t:
             qtitle = Q(title__icontains=t)
@@ -130,6 +135,13 @@ class MapurlsView(ListView):
                 pass
         results_per_page = results_per_page + offset
         return queryset[offset:results_per_page]
+    
+    def make_poly(self,bounds):
+        wn = " ".join([bounds[1],bounds[0]])
+        ws = " ".join([bounds[1],bounds[2]])
+        es = " ".join([bounds[3],bounds[2]])
+        en = " ".join([bounds[3],bounds[0]])
+        return "POLYGON((%s,%s,%s,%s,%s))" % (wn,ws,es,en,wn)
     
     def make_url(self,layer):
         service_url = layer.service.getmapurl if layer.service.getmapurl else layer.service.url
